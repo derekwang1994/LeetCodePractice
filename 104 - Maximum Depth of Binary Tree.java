@@ -7,6 +7,7 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
+ 
 public class Solution {
     public int maxDepth(TreeNode root) {
         if (root == null)
@@ -29,7 +30,7 @@ public class Solution {
 		count++;
 
 	}
-  
+
 	return count;
     }
 }
