@@ -7,30 +7,23 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
- 
+
+ // 遞迴法 //
 public class Solution {
     public int maxDepth(TreeNode root) {
-        if (root == null)
-		return 0;
+        if(root==null) return 0;
 
-	Deque<TreeNode> stack = new LinkedList<TreeNode>();
+        int countL = 1;
+        int countR = 1;
 
-	stack.push(root);
-	int count = 0;
+        if(root.left!=null){
+            countL += maxDepth(root.left);
+        }
 
-	while (!stack.isEmpty()) {
-		int size = stack.size();
-		while (size-- > 0) {
-			TreeNode cur = stack.pop();
-			if (cur.left != null)
-				stack.addLast(cur.left);
-			if (cur.right != null)
-				stack.addLast(cur.right);
-		}
-		count++;
-
-	}
-
-	return count;
+        if(root.right!=null){
+            countR += maxDepth(root.right);
+        }
+        // 判斷左右的高度，回傳較大者 //
+        return (countL>countR) ? countL : countR;
     }
 }
