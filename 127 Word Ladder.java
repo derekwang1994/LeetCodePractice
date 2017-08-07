@@ -21,33 +21,47 @@
 
 public class Solution {
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
-        Set<String> dict = new HashSet<>(wordList), qs = new HashSet<>(), qe = new HashSet<>(), vis = new HashSet<>();
-        qs.add(beginWord);
 
-        if (dict.contains(endWord)) qe.add(endWord); // all transformed words must be in dict (including endWord)
+        Set<String> dict = new HashSet<String>(wordList); // HashSet has a faster .contains() method
+        Set<String> startSet = new HashSet<String>();
+        Set<String> endSet = new HashSet<String>();
+        Set<String> visitedSet = new HashSet<String>();
 
-        for (int len = 2; !qs.isEmpty(); len++) {
-            Set<String> nq = new HashSet<>();
+        startSet.add(beginWord);
+        if(dict.contains(endWord)){
+            endSet.add(endWord);
+        }else{
+            return 0;
+        }
 
-            for (String word : qs) {
-                for (int j = 0; j < word.length(); j++) {
+        int level = 0;
+
+        while(!startSet.isEmpty()){
+            Set<String> tempSet = new HashSet<String>();
+
+            for(String word : startSet){
+                for(int i=0; i<word.length();i++){
                     char[] chars = word.toCharArray();
-                    for (char c = 'a'; c <= 'z'; c++) {
-                        if (c == word.charAt(j)) continue; // beginWord and endWord not the same, so bypass itself
 
-                        chars[j] = c;
-                        String temp = String.valueOf(chars);
+                    for(char c='a'; c<='z'; c++){
+                        if( c == chars[i] ) continue; // beginWord and endWord not the same, so bypass itself
 
-                        if (qe.contains(temp)) return len; // meet from two ends
+                        chars[i] = c;
+                        String tempString = new String(chars);
 
-                        if (dict.contains(temp) && vis.add(temp)){
-                            nq.add(temp); // not meet yet, vis is safe to use
+                        if(endSet.contains(tempString)) return level+2;  // meet from two ends
+
+                        if(dict.contains(tempString) && !visitedSet.contains(tempString)){ // not meet yet, visitedSet is safe to use
+                            tempSet.add(tempString);
+                            visitedSet.add(tempString);
                         }
                     }
                 }
             }
-            qs = (nq.size() < qe.size()) ? nq : qe; // switch to small one to traverse from other end
-            qe = (qs == nq) ? qe : nq;
+
+            startSet = (tempSet.size() < endSet.size()) ? tempSet : endSet;  // switch to small one to traverse from other end
+            endSet = (startSet.equals(tempSet)) ? endSet : tempSet;
+            level++;
         }
         return 0;
     }
